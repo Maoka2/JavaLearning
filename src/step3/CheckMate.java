@@ -6,7 +6,7 @@ public class CheckMate {
 
         Scanner sc = new Scanner(System.in);
         int t = sc.nextInt();
-
+        System.out.println();
         for(int tc = 1; tc<=t; tc++){
             int n = sc.nextInt();
             int[] kqxy = new int[4];
@@ -22,9 +22,9 @@ public class CheckMate {
             // 가로나 세로 같으면 일단 잡히는거고
 
             if(kx == qx || ky == qy || Math.abs(kx-qx) == Math.abs(ky-qy)){
-                System.out.println("#" + tc + " 1\n");
+                System.out.println("#" + tc + " 1");
             } else{
-                System.out.println("#" + tc + " 0\n");
+                System.out.println("#" + tc + " 0");
             }
 
         }
