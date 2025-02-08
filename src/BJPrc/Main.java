@@ -10,44 +10,24 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
-        int[] stackNum = new int[N];
+
+        String[] s = br.readLine().split(" ");
+        int[] numList = new int[N];
         for(int i = 0; i < N; i++){
-            stackNum[i] = Integer.parseInt(br.readLine()); // 만들고싶은 수열
+            numList[i] = Integer.parseInt(s[i]);
         }
-
-        Stack<Integer> numbers = new Stack<Integer>();
-
-        int number = 1;
-        int index = 0;
-        while(number <= N || !numbers.isEmpty() ){
-
-            if(number <= N){
-                numbers.push(number);
-                number++;
-                bw.write("+" + "\n");
+        int max = -1;
+        int min = 1000001;
+        for(int i = 0; i < N; i++){
+            if(numList[i] > max){
+                max = numList[i];
             }
-
-
-            while(!numbers.isEmpty() && numbers.peek() == stackNum[index]){
-                numbers.pop();
-                bw.write("-" + "\n");
-                index++;
-
-
-
+            if(numList[i] < min){
+                min = numList[i];
             }
-
-
-
-
-
         }
 
-        if(index != N){
-            bw.write("NO" + "\n");
-            return;
-        }
-
+        bw.write(max * min + "\n");
 
         bw.flush();
         bw.close();
