@@ -43,7 +43,7 @@ public class Main {
 
         }
 
-        if(!numbers.isEmpty()){
+        if(index != N){
             bw.write("NO" + "\n");
             return;
         }
