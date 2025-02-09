@@ -1,7 +1,7 @@
 package BJPrc;
 
+import java.util.*;
 import java.io.*;
-import java.util.Stack;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -9,41 +9,47 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
-        int[] stackNum = new int[N];
-        for(int i = 0; i < N; i++){
-            stackNum[i] = Integer.parseInt(br.readLine()); // 만들고싶은 수열
+        String[] s = br.readLine().split(" ");
+        int[] twoNumbers = new int[2];
+        twoNumbers[0] = Integer.parseInt(s[0]);
+        twoNumbers[1] = Integer.parseInt(s[1]);
+
+
+
+        if (twoNumbers[1] < 2) {
+            bw.flush();
+            bw.close();
+            br.close();
+            return; // 소수가 없는 경우
+        }
+        if (twoNumbers[0] <= 2 && twoNumbers[1] >=2) {
+            bw.write(2 + "\n"); // 이러면 일단 2는 확실히 있으니까
+            twoNumbers[0] = 3;
+        } else if(twoNumbers[0] % 2 == 0){
+            twoNumbers[0]++;
         }
 
-        Stack<Integer> numbers = new Stack<Integer>();
-        StringBuilder sb =new StringBuilder();
-        int number = 1;
-        int index = 0;
-        while(index < N){
 
-            if(number <= stackNum[index]){
-                numbers.push(number++);
-                sb.append("+\n");
+        for (int i = twoNumbers[0]; i <= twoNumbers[1]; i= i+2) {
+            boolean isPrime = true;
 
-            }else if(!numbers.isEmpty() && numbers.peek() == stackNum[index]){
-                numbers.pop();
-                sb.append("-\n");
-                index++;
-            }else{
-                bw.write("NO\n");
-                bw.flush();
-                return;
+
+            for (int j = 3; j * j <= i; j = j + 2) {
+                if (i % j == 0) {
+                    isPrime = false;
+                    break;
+                }
             }
 
-
+            if (isPrime) {
+                bw.write(i + "\n");
+            }
         }
 
-
-
-        bw.write(sb.toString());
+        // 어차피 짝수는 무조건 아니고 ( 2 제외) , 그러면 twoNumbers[0] 이 2 이상이면 일단 bw.write 2 해주기?
+        // i=3 , for loop 돌 때마다 i = i+2, 제곱수 까지만 보면 됨
         bw.flush();
         bw.close();
         br.close();
     }
-
 }
