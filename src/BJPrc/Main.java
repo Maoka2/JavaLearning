@@ -10,22 +10,18 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         while(true){
+            int count = 0;
             String s = br.readLine();
-            if(s.equals("0")){
+            String aeiou = "aeiouAEIOU";
+            if(s.equals("#")){
                 break;
-            } // 0들어오면 끝내기
-
-            char[] temp = s.toCharArray();
-            char[] reversed = new char[temp.length];
-            for(int i = 0; i < s.length(); i++){
-                reversed[i] = temp[s.length()-i-1];
+            } // #들어오면 끝내기
+            for(int i = 0; i <s.length(); i++){
+                if(aeiou.indexOf(s.charAt(i)) != -1){
+                    count++;
+                }
             }
-            String s2 = new String(reversed);
-            if(s.equals(s2)){
-                bw.write("yes\n");
-            }else{
-                bw.write("no\n");
-            }
+            bw.write(count + "\n");
         }
 
 
