@@ -9,45 +9,29 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] s = br.readLine().split(" ");
-        int[] twoNumbers = new int[2];
-        twoNumbers[0] = Integer.parseInt(s[0]);
-        twoNumbers[1] = Integer.parseInt(s[1]);
-
-
-
-        if (twoNumbers[1] < 2) {
-            bw.flush();
-            bw.close();
-            br.close();
-            return; // 소수가 없는 경우
+        int N = Integer.parseInt(br.readLine());
+        int[] lope = new int[N];
+        for(int i = 0; i < N; i++){
+            lope[i] = Integer.parseInt(br.readLine());
         }
-        if (twoNumbers[0] <= 2 && twoNumbers[1] >=2) {
-            bw.write(2 + "\n"); // 이러면 일단 2는 확실히 있으니까
-            twoNumbers[0] = 3;
-        } else if(twoNumbers[0] % 2 == 0){
-            twoNumbers[0]++;
-        }
+        // 로프가... 음
+        // ex) 10 15 -> 처음에 10, 그 다음엔? 10 15 면 10 *2
+        // ex) 10 10 15 15 20 20 -> (10 -> 10), (10,10 -> 10 10 -> 20) , (10,10,15 -> 10,10,10 -> 30)
+        // (10,10,15,15 -> 10 * 4)
+        // 들 수 있는 최대 무게 -> 지금 연결된 로프들 중 얘가 들 수 있는 최소 무게로프 * 현재 연결 된 로프 개수?
+        // 모든 로프 사용할 필요는 없음니다.?
+        //
+        int max = -1;
+        int count = 1;
+        Arrays.sort(lope); // 로프를 오름차순으로 정렬을 해본다. 내림차순이 더 좋을 것 같다.
 
+        for(int i = N-1; i >=0; i--){
 
-        for (int i = twoNumbers[0]; i <= twoNumbers[1]; i= i+2) {
-            boolean isPrime = true;
-
-
-            for (int j = 3; j * j <= i; j = j + 2) {
-                if (i % j == 0) {
-                    isPrime = false;
-                    break;
-                }
-            }
-
-            if (isPrime) {
-                bw.write(i + "\n");
-            }
+            int weight = lope[i] * (N-i);
+            max = Math.max(max,weight);
         }
 
-        // 어차피 짝수는 무조건 아니고 ( 2 제외) , 그러면 twoNumbers[0] 이 2 이상이면 일단 bw.write 2 해주기?
-        // i=3 , for loop 돌 때마다 i = i+2, 제곱수 까지만 보면 됨
+        bw.write(max + "\n");
         bw.flush();
         bw.close();
         br.close();
