@@ -10,28 +10,41 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
+        int[] stepScore = new int[N+1];
+        for(int i = 1; i <= N; i++){
+            String s = br.readLine();
+            stepScore[i] = Integer.parseInt(s);
+        }
+        int[] sum = new int[N+1];
 
-        // 3으로 나누는게 제일 빨리 줄어들잖음
-        // 그다음에 2
-        // 3번은 언제 할까? -> 1을 빼서 3으로 나눌수있게 할때 쓰면 좋을것같은데
-        // 3으로 나눠지는지 어떻게 아냐? -> 각 자리 수 합이 3으로 나눠지면 3의 배수
+        if(N==1){
+            bw.write(stepScore[1] + "\n");
+            bw.flush();
+            bw.close();
+            br.close();
+            return;
+        }
+        sum[1] = stepScore[1];
 
-        int[] minimum = new int[N+1];
-
-        for(int i = 2; i <=N; i++){
-            // 0, 1은 어차피 0이니까
-            minimum[i] = minimum[i-1] +1; // 일단 기본설정은 나에서 -1하면 내 이전수 라는 접근
-
-            if(i % 2 == 0){
-                minimum[i] = Math.min(minimum[i] , minimum[i/2]+1);
-            }
-
-            if(i % 3 == 0){
-                minimum[i] = Math.min(minimum[i] , minimum[i/3] +1);
-            }
+        sum[2] = stepScore[1] + stepScore[2];
+        if(N == 2){
+            bw.write(sum[2] + "\n");
+            bw.flush();
+            bw.close();
+            br.close();
+            return;
         }
 
-        bw.write(minimum[N] + "\n");
+        sum[3] = Math.max(stepScore[1],stepScore[2]) + stepScore[3];
+        // 마지막 계단은 무적권 밟아야 하니까
+        // case1. N-2번째 계단에서 2개 연속으로 밟기
+        // case2. N-1번째 계단에서 그냥 하나 밟고 끝
+
+        for(int i = 4; i <=N; i++){
+            sum[i] = Math.max(sum[i-2],sum[i-3]+stepScore[i-1]) + stepScore[i];
+        }
+
+        bw.write(sum[N] + "\n");
 
         bw.flush();
         bw.close();
