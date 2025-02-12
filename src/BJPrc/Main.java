@@ -1,8 +1,7 @@
 package BJPrc;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
 
@@ -11,39 +10,21 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String whole = br.readLine();
-        String target = br.readLine();
+        int N = Integer.parseInt(br.readLine());
 
-        Stack<Character> stack = new Stack<>();
-        // 넣으면서 확인해보기?
+        int[] count = new int[10001];
 
-        for(char c : whole.toCharArray()){
-            stack.push(c);
+        for(int i = 0; i < N; i++){
+            count[Integer.parseInt(br.readLine())]++;
+        }
 
-            if(stack.size() >= target.length()){
-                int count = 0;
-                for(int i = 0; i < target.length(); i++){
-                    if(stack.get(stack.size() - target.length() + i) == target.charAt(i)){
-                        count++;
-                    }
-                }
-                if(count == target.length()){
-                    for(int i = 0; i < target.length(); i++){
-                        stack.pop();
-                    }
-                }
+        for(int i = 1; i <=10000; i++){
+            while(count[i] > 0){
+                bw.write(i + "\n");
+                count[i]--;
             }
         }
-        char[] result = new char[stack.size()];
-        for(int i = stack.size()-1; i >=0; i--){
-            result[i] = stack.pop();
-        }
 
-        if(result.length == 0){
-            bw.write("FRULA");
-        } else{
-            bw.write(new String(result));
-        }
         bw.flush();
         br.close();
         bw.close();
