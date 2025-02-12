@@ -1,5 +1,7 @@
 package BJPrc;
+
 import java.io.*;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class Main {
@@ -9,25 +11,39 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-            int N = Integer.parseInt(br.readLine());
-            Stack<Integer> numStack = new Stack<>();
-            for(int i = 0; i < N; i++){
-                int n = Integer.parseInt(br.readLine());
-                if(n != 0){
-                    numStack.push(n);
-                } else{
-                    if(!numStack.isEmpty()){ // 보장한다고하긴함
-                        numStack.pop();
+        String whole = br.readLine();
+        String target = br.readLine();
+
+        Stack<Character> stack = new Stack<>();
+        // 넣으면서 확인해보기?
+
+        for(char c : whole.toCharArray()){
+            stack.push(c);
+
+            if(stack.size() >= target.length()){
+                int count = 0;
+                for(int i = 0; i < target.length(); i++){
+                    if(stack.get(stack.size() - target.length() + i) == target.charAt(i)){
+                        count++;
+                    }
+                }
+                if(count == target.length()){
+                    for(int i = 0; i < target.length(); i++){
+                        stack.pop();
                     }
                 }
             }
-            int sum = 0;
-            for(int num : numStack){
-                sum += num;
-            }
+        }
+        char[] result = new char[stack.size()];
+        for(int i = stack.size()-1; i >=0; i--){
+            result[i] = stack.pop();
+        }
 
-        bw.write(sum + "\n");
-
+        if(result.length == 0){
+            bw.write("FRULA");
+        } else{
+            bw.write(new String(result));
+        }
         bw.flush();
         br.close();
         bw.close();
