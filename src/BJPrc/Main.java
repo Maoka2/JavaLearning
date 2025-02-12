@@ -1,7 +1,8 @@
 package BJPrc;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Stack;
 
 public class Main {
 
@@ -10,20 +11,32 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
-
-        int[] count = new int[10001];
-
-        for(int i = 0; i < N; i++){
-            count[Integer.parseInt(br.readLine())]++;
+        int T = Integer.parseInt(br.readLine());
+        int[] tcNum = new int[T];
+        int max = 0;
+        for (int i = 0; i < T; i++) {
+            tcNum[i] = Integer.parseInt(br.readLine());
+            max = Math.max(max, tcNum[i]);
         }
 
-        for(int i = 1; i <=10000; i++){
-            while(count[i] > 0){
-                bw.write(i + "\n");
-                count[i]--;
-            }
+
+
+
+        int[][] dp = new int[Math.max(2,max+1)][2];
+        dp[0][0] = 1; // 0을 몇번 호출하는가
+        dp[0][1] = 0; // 1을 몇번 호출하는가
+        dp[1][0] = 0; // 앞에 인덱스 : 해당 숫자 , 뒤에 인덱스 : 0이면 0 호출횟수, 1이면 1호출횟수
+        dp[1][1] = 1;
+        for (int i = 2; i <= max; i++) {
+            dp[i][0] = dp[i - 1][0] + dp[i - 2][0];
+            dp[i][1] = dp[i - 1][1] + dp[i - 2][1];
+
+
         }
+        for (int i = 0; i < T; i++) {
+            bw.write(dp[tcNum[i]][0] + " " + dp[tcNum[i]][1] + "\n");
+        }
+
 
         bw.flush();
         br.close();
