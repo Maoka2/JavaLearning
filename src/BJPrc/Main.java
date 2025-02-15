@@ -1,5 +1,4 @@
 package BJPrc;
-
 import java.io.*;
 import java.util.Arrays;
 import java.util.Stack;
@@ -11,33 +10,46 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int T = Integer.parseInt(br.readLine());
-        int[] tcNum = new int[T];
-        int max = 0;
-        for (int i = 0; i < T; i++) {
-            tcNum[i] = Integer.parseInt(br.readLine());
-            max = Math.max(max, tcNum[i]);
+        // 남학생은 남학생끼리, 여는 여끼리
+        // 같은 학년끼리 , 혼자쓰는것도 가능
+        String[] NK = br.readLine().split(" ");
+        int N = Integer.parseInt(NK[0]); // 학생인원
+        int K = Integer.parseInt(NK[1]); // 방 최대인원수
+        // 여 0 , 남 1
+        // 0번인덱스 : 학년, 1번인덱스 : 성별
+
+        int[][] student = new int[6][2];  // 남자면 1번 인덱스에 넣을거고 여자면 0 번 인덱스에 넣을거임
+
+        for(int i = 0; i < N; i++){
+            String[] s = br.readLine().split(" ");
+            int MFM = 0;
+            int grade = 0;
+            if(Integer.parseInt(s[0]) == 1){
+                MFM = 1;
+            } else if(Integer.parseInt(s[0]) == 0){
+                MFM = 0;
+            }
+            grade = Integer.parseInt(s[1])-1;
+
+            student[grade][MFM]++;
         }
 
-
-
-
-        int[][] dp = new int[Math.max(2,max+1)][2];
-        dp[0][0] = 1; // 0을 몇번 호출하는가
-        dp[0][1] = 0; // 1을 몇번 호출하는가
-        dp[1][0] = 0; // 앞에 인덱스 : 해당 숫자 , 뒤에 인덱스 : 0이면 0 호출횟수, 1이면 1호출횟수
-        dp[1][1] = 1;
-        for (int i = 2; i <= max; i++) {
-            dp[i][0] = dp[i - 1][0] + dp[i - 2][0];
-            dp[i][1] = dp[i - 1][1] + dp[i - 2][1];
-
-
-        }
-        for (int i = 0; i < T; i++) {
-            bw.write(dp[tcNum[i]][0] + " " + dp[tcNum[i]][1] + "\n");
+        int count = 0;
+        for(int i = 0; i < 6; i++){
+            for(int j = 0; j < 2; j++){
+                if(student[i][j] <= K && student[i][j] > 0){
+                    count++;
+                } else if (student[i][j] > K){
+                    if(student[i][j] % K == 0){
+                        count += student[i][j] / K;
+                    } else{
+                        count += student[i][j] / K + 1;
+                    }
+                }
+            }
         }
 
-
+        bw. write(count + "\n");
         bw.flush();
         br.close();
         bw.close();
