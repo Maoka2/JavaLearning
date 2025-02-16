@@ -9,61 +9,52 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int N = Integer.parseInt(br.readLine()); // 라운드 수
 
-        for (int tc = 0; tc < N; tc++) {
-            Map<Integer, Integer> aMap = new HashMap<>();
-            Map<Integer, Integer> bMap = new HashMap<>();
+        int[][] squares = new int[4][4];
 
-            String[] sa = br.readLine().split(" ");
-            int[] ia = new int[sa.length - 1];
-            for (int i = 1; i < sa.length; i++) {
-                ia[i - 1] = Integer.parseInt(sa[i]);
+        for(int i = 0; i < 4; i++){
+            String[] s = br.readLine().split(" ");
+            for(int j = 0; j < 4; j++){
+                squares[i][j] = Integer.parseInt(s[j]);
             }
+        }
+        int squareSum = 0;
+        for(int i = 0; i < 4; i++){
+            squareSum += (Math.abs(squares[i][0] - squares[i][2]) * (Math.abs(squares[i][1]-squares[i][3])));
+        }
+        // 일단 직사각형들 면적 다 더하고,
 
-            boolean draw = true;
+        int count = 0;
 
-            for (int i = 0; i < ia.length; i++) {
-                aMap.put(ia[i], aMap.getOrDefault(ia[i], 0) + 1);
+//        System.out.println(squareSum);
+
+
+        int[][] countArray = new int[101][101];
+        for(int i = 0; i < 101; i++){
+            for(int j = 0; j < 101; j++){
+                countArray[i][j] = -1;
             }
-
-            String[] sb = br.readLine().split(" ");
-            int[] ib = new int[sb.length - 1];
-            for (int i = 1; i < sb.length; i++) {
-                ib[i - 1] = Integer.parseInt(sb[i]);
-            }
-
-            for (int i = 0; i < ib.length; i++) {
-                bMap.put(ib[i], bMap.getOrDefault(ib[i], 0) + 1);
-            }
-
-            for (int i = 4; i >= 1; i--) {
-                if (aMap.getOrDefault(i, 0) > bMap.getOrDefault(i, 0)) {
-                    bw.write("A\n");
-                    draw = false;
-                    break;
-                } else if (bMap.getOrDefault(i, 0) > aMap.getOrDefault(i, 0)) {
-                    bw.write("B\n");
-                    draw = false;
-                    break;
-                }
-            }
-            if (draw) {
-                bw.write("D\n");
-            }
-
-            // 규칙 : 우선순위 : 별 > 동그라미 > 네모 > 세모
-            // 숫자 다 같으면 무승부
-            // 별 : 4 동그라미 : 3 네모 : 2 세모 : 1
-
-
         }
 
+        for(int i = 0; i < 4; i++){
+            for(int j = squares[i][0]; j < squares[i][2]; j++){
+                for(int k = squares[i][1]; k < squares[i][3]; k++){
+                    countArray[j][k]++;
+                }
+            }
+        }
 
+        for(int i = 0; i < 101; i++){
+            for(int j = 0; j < 101; j++){
+                if(countArray[i][j] != -1){
+                    squareSum -= countArray[i][j];
+                }
+            }
+        }
+
+        bw.write(squareSum + "\n");
         bw.flush();
         br.close();
         bw.close();
-
-
     }
 }
