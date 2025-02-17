@@ -1,60 +1,58 @@
 package BJPrc;
-
 import java.io.*;
 import java.util.*;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int[][] squares = new int[4][4];
+        StringBuilder sb = new StringBuilder();
+        String[] hw = br.readLine().split(" ");
+        int H = Integer.parseInt(hw[0]);
+        int W = Integer.parseInt(hw[1]);
 
-        for(int i = 0; i < 4; i++){
-            String[] s = br.readLine().split(" ");
-            for(int j = 0; j < 4; j++){
-                squares[i][j] = Integer.parseInt(s[j]);
+        char[][] cloud = new char[H][W];
+
+        for(int i = 0; i < H; i++) {
+            String s = br.readLine();
+            for(int j = 0; j < W; j++) {
+                cloud[i][j] = s.charAt(j);
             }
         }
-        int squareSum = 0;
-        for(int i = 0; i < 4; i++){
-            squareSum += (Math.abs(squares[i][0] - squares[i][2]) * (Math.abs(squares[i][1]-squares[i][3])));
-        }
-        // 일단 직사각형들 면적 다 더하고,
-
-        int count = 0;
-
-//        System.out.println(squareSum);
-
-
-        int[][] countArray = new int[101][101];
-        for(int i = 0; i < 101; i++){
-            for(int j = 0; j < 101; j++){
-                countArray[i][j] = -1;
-            }
-        }
-
-        for(int i = 0; i < 4; i++){
-            for(int j = squares[i][0]; j < squares[i][2]; j++){
-                for(int k = squares[i][1]; k < squares[i][3]; k++){
-                    countArray[j][k]++;
+        int[][] result = new int[H][W];
+        for(int i = 0; i < H; i++) {
+            int temp = -1;
+            for(int j = 0; j < W; j++) {
+                if(cloud[i][j] == 'c'){
+                    temp = 0;
+                } else if(temp != -1){
+                    temp++;
                 }
+                result[i][j] = temp;
             }
         }
 
-        for(int i = 0; i < 101; i++){
-            for(int j = 0; j < 101; j++){
-                if(countArray[i][j] != -1){
-                    squareSum -= countArray[i][j];
-                }
+        for(int i = 0; i < H; i++){
+            for(int j = 0; j < W; j++){
+                bw.write(result[i][j] + " ");
             }
+            bw.write("\n");
         }
 
-        bw.write(squareSum + "\n");
+
+
+
+
+
+
+
+
+
+
+
         bw.flush();
-        br.close();
         bw.close();
+        br.close();
     }
 }
