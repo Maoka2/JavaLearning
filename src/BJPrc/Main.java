@@ -7,51 +7,34 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-        int N = Integer.parseInt(br.readLine());
-        String[] s = br.readLine().split(" ");
-        int max = -1;
-        int maxIdx = -1;
-        Stack<Integer> towers = new Stack<>();
-        int[] temp = new int[N];
-        for (int i = 0; i < N; i++) {
-            temp[i] = Integer.parseInt(s[i]);
-        }
-        int[] result = new int[N];
 
-        for (int i = 0; i < N; i++) {
-            while (!towers.isEmpty() && temp[i] > temp[towers.peek()]) {
-                towers.pop();
-            }
 
-            if (towers.isEmpty()) {
-                result[i] = 0;
-            } else {
-                result[i] = towers.peek() + 1;
-            }
+        // 최소가 되려면? -> - 부호 뒤에서부터 + 숫자 나올때까지 묶여야
+        // 수식 내 모든 연산자가 같다면? 굳이...
+        // - 처음 나타나는 인덱스를 찾고, 제일 늦게 + 나타나는 인덱스를 찾는다? // -가 하나라면
+        // 근데 - + - + 이런식으로 번갈아가면서 나오면? 다음 - 전까지 묶으면 됨
 
-            towers.push(i);
+        String[] s = br.readLine().split("-");
+
+        int result = 0;
+
+        String[] beforeMinus = s[0].split("\\+");
+
+        for (String str : beforeMinus) {
+            result += Integer.parseInt(str);
         }
 
-        boolean isZeros = true;
-
-        for (int n : result) {
-            if (n != 0) {
-                isZeros = false;
+        for (int i = 1; i < s.length; i++) {
+            String[] str = s[i].split("\\+");
+            int sum = 0;
+            for (String ss : str) {
+                sum += Integer.parseInt(ss);
             }
+
+            result -= sum;
         }
 
-        if (isZeros) {
-            sb.append(0);
-        } else {
-            for (int i = 0; i < N; i++) {
-                sb.append(result[i]).append(" ");
-            }
-        }
-
-        String ans = sb.toString().trim();
-
-        bw.write(ans + "\n");
+        bw.write(result + "\n");
 
         bw.flush();
         bw.close();
