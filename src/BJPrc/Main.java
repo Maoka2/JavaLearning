@@ -8,33 +8,34 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        String[] s = br.readLine().split(" ");
+        int N = Integer.parseInt(s[0]);
+        int M = Integer.parseInt(s[1]);
 
-        // 최소가 되려면? -> - 부호 뒤에서부터 + 숫자 나올때까지 묶여야
-        // 수식 내 모든 연산자가 같다면? 굳이...
-        // - 처음 나타나는 인덱스를 찾고, 제일 늦게 + 나타나는 인덱스를 찾는다? // -가 하나라면
-        // 근데 - + - + 이런식으로 번갈아가면서 나오면? 다음 - 전까지 묶으면 됨
+        int[] nums = new int[N];
+        String[] number = br.readLine().split(" ");
 
-        String[] s = br.readLine().split("-");
-
-        int result = 0;
-
-        String[] beforeMinus = s[0].split("\\+");
-
-        for (String str : beforeMinus) {
-            result += Integer.parseInt(str);
+        for (int i = 0; i < N; i++) {
+            nums[i] = Integer.parseInt(number[i]);
         }
 
-        for (int i = 1; i < s.length; i++) {
-            String[] str = s[i].split("\\+");
+        int[] accumulation = new int[N + 1];
+        for (int i = 1; i <= N; i++) {
+            accumulation[i] = accumulation[i - 1] + nums[i - 1];
+            // 1, 1 +2 , 1 + 2 + 3, .... 1~3 ->
+        }
+
+        for (int i = 0; i < M; i++) {
             int sum = 0;
-            for (String ss : str) {
-                sum += Integer.parseInt(ss);
-            }
+            String[] range = br.readLine().split(" ");
+            int initIdx = Integer.parseInt(range[0]);
+            int finIdx = Integer.parseInt(range[1]);
+            // 1 3 -> acc[3]; 2 4 -> 1~4 - 1
+            int ans = accumulation[finIdx] - accumulation[initIdx-1];
+            bw.write(ans + "\n");
 
-            result -= sum;
         }
 
-        bw.write(result + "\n");
 
         bw.flush();
         bw.close();
