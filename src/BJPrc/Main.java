@@ -1,45 +1,40 @@
 package BJPrc;
 
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         String[] s = br.readLine().split(" ");
         int N = Integer.parseInt(s[0]);
-        int M = Integer.parseInt(s[1]);
+        int K = Integer.parseInt(s[1]);
 
-        int[] nums = new int[N];
-        String[] number = br.readLine().split(" ");
+        // 일단 넣어
+        // W의 합이 K보다 크면 안되고
+        // V는 최대가 되었으면...
 
+        int[] arr = new int[K + 1]; // 무게 1~K 까지일 때의 value?
+
+        int[][] products = new int[N][2];
         for (int i = 0; i < N; i++) {
-            nums[i] = Integer.parseInt(number[i]);
+            String[] ss = br.readLine().split(" ");
+            int W = Integer.parseInt(ss[0]);
+            int V = Integer.parseInt(ss[1]);
+            products[i][0] = W;
+            products[i][1] = V;
+
+            for (int j = K; j >= W; j--){
+                arr[j] = Math.max(arr[j], arr[j-W] + V);
+            }
         }
 
-        int[] accumulation = new int[N + 1];
-        for (int i = 1; i <= N; i++) {
-            accumulation[i] = accumulation[i - 1] + nums[i - 1];
-            // 1, 1 +2 , 1 + 2 + 3, .... 1~3 ->
-        }
-
-        for (int i = 0; i < M; i++) {
-            int sum = 0;
-            String[] range = br.readLine().split(" ");
-            int initIdx = Integer.parseInt(range[0]);
-            int finIdx = Integer.parseInt(range[1]);
-            // 1 3 -> acc[3]; 2 4 -> 1~4 - 1
-            int ans = accumulation[finIdx] - accumulation[initIdx-1];
-            bw.write(ans + "\n");
-
-        }
-
-
+        bw.write(arr[K] + "\n");
         bw.flush();
         bw.close();
         br.close();
     }
 }
-
