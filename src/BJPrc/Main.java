@@ -9,30 +9,29 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        int N = Integer.parseInt(br.readLine());
         String[] s = br.readLine().split(" ");
-        int N = Integer.parseInt(s[0]);
-        int K = Integer.parseInt(s[1]);
+        int[] size = new int[s.length];
+        for (int i = 0; i < s.length; i++) {
+            size[i] = Integer.parseInt(s[i]);
+        }
+        String[] ss = br.readLine().split(" ");
+        int T = Integer.parseInt(ss[0]);
+        int P = Integer.parseInt(ss[1]);
+        // T -> 각 나누기 5 몫 + 1
+        //펜 -> N / P, N % P
 
-        // 일단 넣어
-        // W의 합이 K보다 크면 안되고
-        // V는 최대가 되었으면...
-
-        int[] arr = new int[K + 1]; // 무게 1~K 까지일 때의 value?
-
-        int[][] products = new int[N][2];
-        for (int i = 0; i < N; i++) {
-            String[] ss = br.readLine().split(" ");
-            int W = Integer.parseInt(ss[0]);
-            int V = Integer.parseInt(ss[1]);
-            products[i][0] = W;
-            products[i][1] = V;
-
-            for (int j = K; j >= W; j--){
-                arr[j] = Math.max(arr[j], arr[j-W] + V);
+        int tCount = 0;
+        for (int i = 0; i < s.length; i++) {
+            if (size[i] % T != 0) {
+                tCount += (size[i] / T) + 1;
+            } else{
+                tCount += size[i] / T;
             }
         }
+        bw.write(tCount + "\n");
+        bw.write(N / P + " " + N % P + "\n");
 
-        bw.write(arr[K] + "\n");
         bw.flush();
         bw.close();
         br.close();
