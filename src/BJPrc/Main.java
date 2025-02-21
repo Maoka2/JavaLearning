@@ -9,17 +9,23 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
-        // 6667 이런것도 종말의 수?
+        int fiveCount = 0;
         int count = 0;
-        int num = 0;
-        while(count != N){
-            num++;
-            if(String.valueOf(num).contains("666")){
-                count++;
+
+        for(int i = 1; i <= N; i++){
+            int num = i;
+
+            while(num >= 5){
+                if(num % 5 == 0){
+                    fiveCount++;
+                    num /= 5;
+                } else{
+                    break;
+                }
             }
         }
-        bw.write(num + "\n");
 
+        bw.write(fiveCount + "\n");
         bw.flush();
         bw.close();
         br.close();
