@@ -8,24 +8,21 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
-        int fiveCount = 0;
-        int count = 0;
-
-        for(int i = 1; i <= N; i++){
-            int num = i;
-
-            while(num >= 5){
-                if(num % 5 == 0){
-                    fiveCount++;
-                    num /= 5;
-                } else{
-                    break;
-                }
-            }
+        String[] s = br.readLine().split(" ");
+        int N = Integer.parseInt(s[0]);
+        int K = Integer.parseInt(s[1]);
+        int result = 1;
+        int divide = 1;
+        int count = K;
+        for(int i = 0; i < count; i++){
+            result *= N;
+            divide *= K;
+            N--;
+            K--;
         }
 
-        bw.write(fiveCount + "\n");
+        bw.write(result/divide + "\n");
+
         bw.flush();
         bw.close();
         br.close();
