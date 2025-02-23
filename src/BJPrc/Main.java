@@ -8,46 +8,51 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int T = Integer.parseInt(br.readLine());
-        for(int i = 0; i < T; i++){
-            Deque<int[]> q = new ArrayDeque<>();
-            String[] s = br.readLine().split(" ");
-            int N = Integer.parseInt(s[0]);
-            int M = Integer.parseInt(s[1]);
-
-            String[] pri = br.readLine().split(" ");
-            for(int j = 0; j < N; j++){
-                q.add(new int[]{Integer.parseInt(pri[j]), j});
-            }
-
-            int count = 0;
-
-            while(!q.isEmpty()){
-                int[] current = q.pollFirst();
-                int priority = current[0];
-                int idx = current[1];
-                boolean isHigher = false;
-                // 우선순위가 더 높은게 있다면 current 맨 뒤로 보내기
-                for(int[] n : q){
-                    if(n[0] > priority){
-                        isHigher = true;
-                        break;
-                    }
-                }
-
-                if(isHigher){
-                    q.addLast(current);
-                } else{
-                    count++;
-                    if(idx == M){
-                        bw.write(count + "\n");
-                        break;
-                    }
-                }
-            }
-
-
+        int N = Integer.parseInt(br.readLine());
+        int[] numbers = new int[N];
+        int sum = 0;
+        for(int i = 0; i < N; i++){
+            numbers[i] = Integer.parseInt(br.readLine());
+            sum+= numbers[i];
         }
+
+        int avg = (int) Math.round((double) sum / N);
+        bw.write(avg + "\n");
+
+        Arrays.sort(numbers);
+
+        bw.write(numbers[N/2] + "\n");
+
+        Map<Integer,Integer> m = new HashMap<>();
+        for(int n : numbers){
+            m.put(n,m.getOrDefault(n,0)+ 1);
+        }
+        int maxCount = -1;
+        int value = -1;
+        for(int n : m.keySet()){
+            if(m.get(n) > maxCount){
+                maxCount = m.get(n);
+            }
+        }
+
+        List<Integer> l = new ArrayList<>();
+
+        for(int n : m.keySet()){
+            if(m.get(n) == maxCount){
+                l.add(n);
+            }
+        }
+        Collections.sort(l);
+        if(l.size() == 1){
+            bw.write(l.get(0) + "\n");
+        } else{
+            bw.write(l.get(1) + "\n");
+        }
+
+        int range = numbers[N-1] - numbers[0];
+
+        bw.write(range + "\n");
+
         bw.flush();
         bw.close();
         br.close();
