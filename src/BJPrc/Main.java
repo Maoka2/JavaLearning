@@ -8,50 +8,39 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
-        int[] numbers = new int[N];
-        int sum = 0;
-        for(int i = 0; i < N; i++){
-            numbers[i] = Integer.parseInt(br.readLine());
-            sum+= numbers[i];
+        String[] s = br.readLine().split(" ");
+        int K = Integer.parseInt(s[0]);
+        int N = Integer.parseInt(s[1]);
+        long[] lines = new long[K];
+        for (int i = 0; i < K; i++) {
+            lines[i] = Long.parseLong(br.readLine());
         }
+        // 802 / ans  + 743 /ans + 457 / ans + 539 / ans -> 11 이 되게 하는 ans의 최대값
 
-        int avg = (int) Math.round((double) sum / N);
-        bw.write(avg + "\n");
+        //냅다 그냥 다 찾거나
 
-        Arrays.sort(numbers);
+        long left = 1;
+        Arrays.sort(lines);
+        long right = lines[K - 1];
+        long temp = 0;
+        while (left <= right) {
+            int count = 0;
+            long center = (left + right) / 2;
 
-        bw.write(numbers[N/2] + "\n");
+            for(int i = 0; i < K; i++){
+                count += lines[i] / center;
+            }
 
-        Map<Integer,Integer> m = new HashMap<>();
-        for(int n : numbers){
-            m.put(n,m.getOrDefault(n,0)+ 1);
-        }
-        int maxCount = -1;
-        int value = -1;
-        for(int n : m.keySet()){
-            if(m.get(n) > maxCount){
-                maxCount = m.get(n);
+            if(count < N){
+                // 덜 만들어졌으면 center 값이 작아져야
+                right = center-1;
+            }else{
+                temp = center;
+                left = center + 1;
             }
         }
 
-        List<Integer> l = new ArrayList<>();
-
-        for(int n : m.keySet()){
-            if(m.get(n) == maxCount){
-                l.add(n);
-            }
-        }
-        Collections.sort(l);
-        if(l.size() == 1){
-            bw.write(l.get(0) + "\n");
-        } else{
-            bw.write(l.get(1) + "\n");
-        }
-
-        int range = numbers[N-1] - numbers[0];
-
-        bw.write(range + "\n");
+        bw.write(temp + "\n");
 
         bw.flush();
         bw.close();
