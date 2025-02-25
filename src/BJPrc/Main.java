@@ -10,22 +10,28 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int T = Integer.parseInt(br.readLine());
+        for(int i = 0; i < T; i++){
+            int N = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < T; i++) {
-            Map<String, Integer> m = new HashMap<>();
-            int n = Integer.parseInt(br.readLine());
-            for (int j = 0; j < n; j++) {
-                String[] s = br.readLine().split(" ");
-                m.put(s[1], m.getOrDefault(s[1], 0) + 1);
-            }
-            int sum = 1;
 
-            for(String str : m.keySet()){
-                sum = sum * (m.get(str)+1);
+            if(N <= 3){
+                bw.write( "1\n");
+                continue;
             }
 
-            bw.write(sum-1 + "\n");
+            long[] dp = new long[N+1];
+
+            dp[1] = 1;
+            dp[2] = 1;
+            dp[3] = 1;
+
+
+            for(int j = 4; j <= N; j++){
+                dp[j] = dp[j-2] + dp[j-3];
+            }
+            bw.write(dp[N] + "\n");
         }
+
         bw.flush();
         br.close();
         bw.close();
