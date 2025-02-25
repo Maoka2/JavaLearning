@@ -11,23 +11,19 @@ public class Main {
 
         String[] s = br.readLine().split(" ");
         int N = Integer.parseInt(s[0]);
-        int K = Integer.parseInt(s[1]);
+        int M = Integer.parseInt(s[1]);
 
-        int[] coins = new int[N];
+        Map<String,String> m = new HashMap<>();
+
         for(int i = 0; i < N; i++){
-            coins[i] = Integer.parseInt(br.readLine());
+            String[] pw = br.readLine().split(" ");
+            m.put(pw[0],pw[1]);
         }
 
-        int total = K;
-        int count = 0;
-        for(int i = N-1; i>= 0; i--){
-            while(total >= coins[i]){
-                count += total / coins[i];
-                total = total % coins[i];
-            }
+        for(int i = 0; i < M; i++){
+            String ss = br.readLine();
+            bw.write(m.get(ss) + "\n");
         }
-
-        bw.write(count + "\n");
         bw.flush();
         br.close();
         bw.close();
