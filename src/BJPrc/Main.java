@@ -9,27 +9,38 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int T = Integer.parseInt(br.readLine());
-        for(int i = 0; i < T; i++){
-            int N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
+        List<List<Integer>> l = new ArrayList<>();
 
-            if(N <= 3){
-                bw.write( "1\n");
-                continue;
+        for(int i = 0; i <= N; i++){
+            l.add(new ArrayList<>());
+        }
+        for(int i = 0; i < N-1; i++){
+            String[] s = br.readLine().split(" ");
+            l.get(Integer.parseInt(s[0])).add(Integer.parseInt(s[1]));
+            l.get(Integer.parseInt(s[1])).add(Integer.parseInt(s[0]));
+        }
+
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[N+1];
+        int[] parent = new int[N+1];
+        q.add(1);
+        visited[1] = true;
+
+        while(!q.isEmpty()){
+            int node = q.poll();
+
+            for(int next : l.get(node)){
+                if(!visited[next]){
+                    q.add(next);
+                    visited[next] = true;
+                    parent[next] = node;
+                }
             }
-
-            long[] dp = new long[N+1];
-
-            dp[1] = 1;
-            dp[2] = 1;
-            dp[3] = 1;
-
-
-            for(int j = 4; j <= N; j++){
-                dp[j] = dp[j-2] + dp[j-3];
-            }
-            bw.write(dp[N] + "\n");
+        }
+        for(int i = 2; i <=N; i++){
+            bw.write(parent[i] + "\n");
         }
 
         bw.flush();
