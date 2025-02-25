@@ -9,29 +9,36 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] s = br.readLine().split(" ");
-        int N = Integer.parseInt(s[0]);
-        int M = Integer.parseInt(s[1]);
-
-        Map<Integer, String> dogam = new HashMap<>();
-        Map<String, Integer> dogam2 = new HashMap<>();
-
-        for (int i = 1; i <= N; i++) {
-            String name = br.readLine();
-            dogam.put(i, name);
-            dogam2.put(name, i);
+        int computer = Integer.parseInt(br.readLine());
+        int lines = Integer.parseInt(br.readLine());
+        List<List<Integer>> l = new ArrayList<>();
+        for (int i = 0; i <= computer; i++) {
+            l.add(new ArrayList<>());
+        }
+        for (int i = 0; i < lines; i++) {
+            String[] s = br.readLine().split(" ");
+            l.get(Integer.parseInt(s[0])).add(Integer.parseInt(s[1]));
+            l.get(Integer.parseInt(s[1])).add(Integer.parseInt(s[0]));
         }
 
-        for (int i = 0; i < M; i++) {
-            String ss = br.readLine();
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[computer + 1];
+        int count = 0;
+        q.add(1);
+        visited[1] = true;
 
-            if (Character.isDigit(ss.charAt(0))) {
-                bw.write(dogam.get(Integer.parseInt(ss)) + "\n");
-            } else {
-                bw.write(dogam2.get(ss) + "\n");
+        while (!q.isEmpty()) {
+            int node = q.poll();
+
+            for (int next : l.get(node)) {
+                if (!visited[next]) {
+                    q.add(next);
+                    visited[next] = true;
+                    count++;
+                }
             }
         }
-
+        bw.write(count + "\n");
         bw.flush();
         br.close();
         bw.close();
