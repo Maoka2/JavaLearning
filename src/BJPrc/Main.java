@@ -3,6 +3,7 @@ package BJPrc;
 import java.io.*;
 import java.util.*;
 
+
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,28 +12,29 @@ public class Main {
         String[] s = br.readLine().split(" ");
         int N = Integer.parseInt(s[0]);
         int M = Integer.parseInt(s[1]);
-        Set<String> set = new HashSet<>();
-        // 듣도 못한
-        for(int i = 0; i < N; i++){
-            set.add(br.readLine());
+
+        Map<Integer, String> dogam = new HashMap<>();
+        Map<String, Integer> dogam2 = new HashMap<>();
+
+        for (int i = 1; i <= N; i++) {
+            String name = br.readLine();
+            dogam.put(i, name);
+            dogam2.put(name, i);
         }
 
-        String name;
-        int count = 0;
-        List<String> l = new ArrayList<>();
-        while((name = br.readLine()) != null){
-            if(set.contains(name)){
-                count++;
-                l.add(name);
+        for (int i = 0; i < M; i++) {
+            String ss = br.readLine();
+
+            if (Character.isDigit(ss.charAt(0))) {
+                bw.write(dogam.get(Integer.parseInt(ss)) + "\n");
+            } else {
+                bw.write(dogam2.get(ss) + "\n");
             }
         }
-        bw.write(count + "\n");
-        Collections.sort(l);
-        for(String ss : l){
-            bw.write(ss + "\n");
-        }
+
         bw.flush();
-        bw.close();
         br.close();
+        bw.close();
     }
 }
+
