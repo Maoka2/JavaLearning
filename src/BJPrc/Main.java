@@ -9,64 +9,45 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] s = br.readLine().split(" ");
-        int N = Integer.parseInt(s[0]);
-        int M = Integer.parseInt(s[1]);
-        int V = Integer.parseInt(s[2]);
+        String s = br.readLine();
+        boolean isLast = true;
 
-        List<List<Integer>> l = new ArrayList<>();
-
-        for (int i = 0; i <= N; i++) {
-            l.add(new ArrayList<>());
+        Deque<Character> d = new ArrayDeque<>();
+        Deque<Character> temp = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            d.add(s.charAt(i));
         }
-        for (int i = 0; i < M; i++) {
+
+        int N = Integer.parseInt(br.readLine());
+
+        while (N-- > 0) {
             String[] ss = br.readLine().split(" ");
-            l.get(Integer.parseInt(ss[0])).add(Integer.parseInt(ss[1]));
-            l.get(Integer.parseInt(ss[1])).add(Integer.parseInt(ss[0]));
-        }
-
-        for (int i = 0; i <= N; i++) {
-            Collections.sort(l.get(i));
-        }
-
-        Queue<Integer> q = new LinkedList<>();
-        Stack<Integer> stack = new Stack<>();
-        List<Integer> dfs = new ArrayList<>();
-
-        boolean visitedBFS[] = new boolean[N + 1];
-        boolean visitedDFS[] = new boolean[N + 1];
-
-        q.add(V);
-        stack.push(V);
-
-        visitedDFS[V] = true;
-        visitedBFS[V] = true;
-
-        //DFS
-        while (!stack.isEmpty()) {
-            int node = stack.pop();
-            dfs.add(node);
-            for (int next : l.get(node)) {
-                if (!visitedDFS[next]) {
-                    visitedDFS[next] = true;
-                    stack.push(next);
+            if (ss[0].charAt(0) == 'P') {
+                d.addLast(ss[1].charAt(0));
+            } else if (ss[0].charAt(0) == 'L') {
+                if (!d.isEmpty()) {
+                    temp.addFirst(d.pollLast());
+                }
+            } else if (ss[0].charAt(0) == 'D') {
+                if (!temp.isEmpty()) {
+                    d.addLast(temp.pollFirst());
+                }
+            } else { //B
+                if(!d.isEmpty()){
+                    d.pollLast();
                 }
             }
         }
 
-
-        //BFS
-        while (!q.isEmpty()) {
-            int node = q.poll();
-
-            for (int next : l.get(node)) {
-                if (!visitedBFS[next]) {
-                    q.add(next);
-                    visitedBFS[next] = true;
-                }
-            }
+        while(!d.isEmpty()){
+            bw.write(d.pollFirst());
         }
 
+        while(!temp.isEmpty()){
+            bw.write(temp.pollFirst());
+        }
+
+        bw.write("\n");
         bw.flush();
         br.close();
         bw.close();
