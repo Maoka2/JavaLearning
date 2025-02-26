@@ -9,45 +9,56 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        Stack<Character> stack = new Stack<>();
         String s = br.readLine();
-        boolean isLast = true;
 
-        Deque<Character> d = new ArrayDeque<>();
-        Deque<Character> temp = new ArrayDeque<>();
+        // 여는 괄호면 일단 넣어
+        // 여는 괄호가 연속으로 나오면? 곱하기잖음?
+        // 2 * 2+ 3*3
+        boolean isPossible = true;
+        int ans = 0;
+        int temp = 1;
+
         for (int i = 0; i < s.length(); i++) {
-            d.add(s.charAt(i));
-        }
+            if (s.charAt(i) == '(') {
+                stack.push(s.charAt(i));
+                temp *= 2;
+            } else if (s.charAt(i) == '[') {
+                stack.push(s.charAt(i));
+                temp *= 3;
+            } else if (s.charAt(i) == ')') {
+                if (stack.isEmpty() || stack.peek() != '(') {
+                    isPossible = false;
+                    break;
+                }
+                if (s.charAt(i-1) == '(') {
+                    ans += temp;
+                }
+                stack.pop();
+                temp /= 2;
 
-        int N = Integer.parseInt(br.readLine());
-
-        while (N-- > 0) {
-            String[] ss = br.readLine().split(" ");
-            if (ss[0].charAt(0) == 'P') {
-                d.addLast(ss[1].charAt(0));
-            } else if (ss[0].charAt(0) == 'L') {
-                if (!d.isEmpty()) {
-                    temp.addFirst(d.pollLast());
+            } else if (s.charAt(i) == ']') {
+                if (stack.isEmpty() || stack.peek() != '[') {
+                    isPossible = false;
+                    break;
                 }
-            } else if (ss[0].charAt(0) == 'D') {
-                if (!temp.isEmpty()) {
-                    d.addLast(temp.pollFirst());
+                if (s.charAt(i-1) == '[') {
+                    ans += temp;
                 }
-            } else { //B
-                if(!d.isEmpty()){
-                    d.pollLast();
-                }
+                temp /= 3;
+                stack.pop();
             }
         }
-
-        while(!d.isEmpty()){
-            bw.write(d.pollFirst());
+        if(!stack.isEmpty()){
+            isPossible = false;
         }
 
-        while(!temp.isEmpty()){
-            bw.write(temp.pollFirst());
+        if(!isPossible){
+            bw.write(0 + "\n");
+        }else{
+            bw.write(ans + "\n");
         }
 
-        bw.write("\n");
         bw.flush();
         br.close();
         bw.close();
