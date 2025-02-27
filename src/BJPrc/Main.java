@@ -46,11 +46,9 @@ public class Main {
         }
 
         for (int i = 1; i <= N; i++) {
-            if (!visited[i]) {
-                visited[i] = true;
+            if (depth == 0 || result[depth-1] <= arr[i]) {
                 result[depth] = arr[i];
                 backTracking(result, arr, N, M, depth + 1, visited);
-                visited[i] = false;
             }
         }
     }
