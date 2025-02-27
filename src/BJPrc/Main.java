@@ -5,61 +5,44 @@ import java.util.*;
 
 
 public class Main {
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         String[] nm = br.readLine().split(" ");
-        int N = Integer.parseInt(nm[0]);
-        int M = Integer.parseInt(nm[1]);
-        Deque<Integer> d = new ArrayDeque<>();
-        for (int i = 0; i < N; i++) {
-            d.add(i + 1);
+        int N = Integer.parseInt(nm[0]); // 1~N
+        int M = Integer.parseInt(nm[1]); // 길이가 M
+        // 수열의 길이가 M이 된다면 끝내기
+        int[] arr = new int[N+1];
+        for(int i = 1; i <= N; i++){
+            arr[i] = i;
         }
 
-        String[] s = br.readLine().split(" ");
-        int count = 0;
+        boolean visited[] = new boolean[N+1];
+        backTracking(arr,visited,N,M,0);
 
-        for (int i = 0; i < s.length; i++) {
-            // 왼쪽으로 돌지 오른쪽으로 돌지
-            int target = Integer.parseInt(s[i]);
-            boolean isClockwise = false;
 
-            if(d.peekFirst() == target){
-                d.pollFirst();
-                continue;
-            }
-
-            int index = 0;
-            for(int n : d){
-                if(n == target){
-                    break;
-                }
-                index++;
-            }
-
-            if (index > d.size() / 2) {
-                isClockwise = true;
-                // 반띵보다 뒤에 있으면 시계방향으로 도는게 이득 (맨 뒤를 맨 앞으로)
-                // 앞이면 반시계 (앞에꺼 맨 뒤로 보내기)
-            }
-            while(d.peekFirst() != target){
-                // 시계방향이면
-                if(isClockwise){
-                    d.addFirst(d.pollLast());
-                    count++;
-                } else{
-                    d.addLast(d.pollFirst());
-                    count++;
-                }
-            }
-            d.pollFirst();
-        }
-        bw.write(count + "\n");
 
 
         bw.flush();
         bw.close();
         br.close();
+    }
+    public static void backTracking(int[] sequence, boolean[] visited, int N, int M , int depth) throws IOException {
+        if(depth == M){
+            for(int i = 0; i < M; i++){
+                bw.write(sequence[i] + " ");
+            }
+            bw.write("\n");
+            return;
+        }
+        for(int i = 1; i <= N; i++){
+            if(!visited[i]){
+                sequence[depth] = i;
+                visited[i] = true;
+                backTracking(sequence,visited,N,M,depth+1);
+                visited[i] = false;
+            }
+        }
     }
 }
