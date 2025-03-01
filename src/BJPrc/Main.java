@@ -3,57 +3,86 @@ package BJPrc;
 import java.io.*;
 import java.util.*;
 
-
 public class Main {
-    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-    static Set<String> printing = new HashSet<>();
 
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] nm = br.readLine().split(" ");
-        int N = Integer.parseInt(nm[0]);
-        int M = Integer.parseInt(nm[1]);
+        String[] nmv = br.readLine().split(" ");
+        int N = Integer.parseInt(nmv[0]);
+        int M = Integer.parseInt(nmv[1]);
+        int V = Integer.parseInt(nmv[2]);
 
-        int[] numArray = new int[N + 1];
-        String[] numbers = br.readLine().split(" ");
-        for (int i = 1; i <= N; i++) {
-            numArray[i] = Integer.parseInt(numbers[i - 1]);
+        List<List<Integer>> l = new ArrayList<>();
+        for (int i = 0; i <= N; i++) {
+            l.add(new ArrayList<>());
         }
-        Arrays.sort(numArray);
-        boolean[] visitied = new boolean[N + 1];
-        int[] result = new int[M];
-        backTracking(result, numArray, N, M, 0,visitied);
 
+        for (int i = 0; i < M; i++) {
+            String[] s = br.readLine().split(" ");
+            int a = Integer.parseInt(s[0]);
+            int b = Integer.parseInt(s[1]);
+
+            l.get(a).add(b);
+            l.get(b).add(a);
+
+        }
+        for(int i = 0; i <= N; i++){
+            Collections.sort(l.get(i));
+        }
+
+        //DFS
+        boolean[] visited1 = new boolean[N+1];
+        dfs(V,l,visited1);
+        bw.write("\n");
+        //BFS
+        boolean[] visited2 = new boolean[N+1];
+        bfs(V,l,visited2);
+        bw.write("\n");
 
         bw.flush();
         bw.close();
         br.close();
     }
+    static void dfs(int node, List<List<Integer>> list, boolean[] visited) throws IOException{
+        Stack<Integer> stack = new Stack<>();
+        stack.push(node);
 
-    static void backTracking(int[] result, int[] arr, int N, int M, int depth, boolean[] visited) throws IOException {
-        if (depth == M) {
-            String s = "";
-            for (int i = 0; i < M; i++) {
-                s += result[i] + " ";
-            }
-            if(!printing.contains(s)){
-                printing.add(s);
-                bw.write(s + "\n");
-            }
+        while(!stack.isEmpty()){
+            int current = stack.pop();
 
-            return;
-        }
+            if(!visited[current]){
+                visited[current] = true;
+                bw.write(current + " ");
 
-        for (int i = 1; i <= N; i++) {
-            if (depth == 0 || result[depth-1] <= arr[i]) {
-                result[depth] = arr[i];
-                backTracking(result, arr, N, M, depth + 1, visited);
+                List<Integer> adjacent = list.get(current);
+
+                for(int i = adjacent.size()-1; i >=0; i--){
+                    if(!visited[adjacent.get(i)]){
+                        stack.push(adjacent.get(i));
+                    }
+                }
             }
         }
     }
 
+    static void bfs(int node, List<List<Integer>> list, boolean[] visited) throws IOException{
+        Queue<Integer> q = new ArrayDeque<>();
+        q.add(node);
+        visited[node] = true;
+
+        while(!q.isEmpty()){
+            int current = q.poll();
+            bw.write(current + " ");
+
+            for(int next : list.get(current)){
+                if(!visited[next]){
+                    visited[next] = true;
+                    q.add(next);
+                }
+            }
+        }
+    }
 }
-
-
-
