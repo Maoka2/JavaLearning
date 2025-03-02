@@ -8,28 +8,36 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int N = Integer.parseInt(br.readLine());
+        String[] np = br.readLine().split(" ");
+        int N = Integer.parseInt(np[0]);
+        int P = Integer.parseInt(np[1]);
+
+        // 현재 프렛? 보다 크면 그냥 누르고있고 작아지면 떼버리기?
+        ArrayList<Stack<Integer>> l = new ArrayList<>();
+
         int count = 0;
 
-        // 좋은 단어? 뭔소리임
+        for(int i = 0; i < 6; i++){
+            l.add(new Stack<>());
+        }
 
         for(int i = 0; i < N; i++){
-            Stack<Character> stack = new Stack<>();
+            String[] s = br.readLine().split(" ");
+            int line = Integer.parseInt(s[0]);
+            int vmfpt = Integer.parseInt(s[1]);
 
-            String s = br.readLine();
 
-            for(int j = 0; j < s.length(); j++){
-                if(!stack.isEmpty() && stack.peek() == s.charAt(j)){
-                    stack.pop();
-                }else{
-                    stack.push(s.charAt(j));
-                }
+            while(!l.get(line-1).isEmpty() && l.get(line-1).peek() > vmfpt){
+                l.get(line-1).pop();
+                count++;
             }
 
-            if(stack.isEmpty()){
+            if(l.get(line-1).isEmpty() || l.get(line-1).peek() != vmfpt){
+                l.get(line-1).push(vmfpt);
                 count++;
             }
         }
+
         bw.write(count + "\n");
         bw.flush();
         br.close();
