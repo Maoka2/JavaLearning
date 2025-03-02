@@ -8,42 +8,45 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-
-        // 친구 -> 자신과 반 등수 차이가 K를 넘으면 친구가 아니라는거
-        // 좋은 친구 -> 이름의 길이가 같아야, 등수 차이가 K이하이면서
-
-        String[] nk = br.readLine().split(" ");
-        int N = Integer.parseInt(nk[0]);
-        int K = Integer.parseInt(nk[1]);
-
-        long count = 0;
-
-        int[] nameLength = new int[N];
+        int N = Integer.parseInt(br.readLine());
+        String s = br.readLine();
+        double result = 0;
+        double[] numbers = new double[N];
 
         for(int i = 0; i < N; i++){
-            nameLength[i] = br.readLine().length();
+            numbers[i] = Double.parseDouble(br.readLine());
         }
-        int[] lengths = new int[21];
 
-        Deque<Integer> d = new ArrayDeque<>();
+        Stack<Double> stack = new Stack<>();
 
-        for(int i = 0; i < N; i++){
-            int length = nameLength[i];
-            count += lengths[length];
+        for(int i = 0; i < s.length(); i++){
+            if( s.charAt(i) >= 'A' && s.charAt(i) <= 'Z'){
+                stack.push(numbers[s.charAt(i)-'A']);
+            }else{ // 연산자
+                double a = stack.pop();
+                double b = stack.pop();
 
-            d.addLast(length);
-            lengths[length]++;
+                switch(s.charAt(i)){
+                    case '+':
+                        stack.push(b+a);
+                        break;
 
-            if(d.size() > K){
-                int remove = d.pollFirst();
-                lengths[remove]--;
+                    case '-':
+                        stack.push(b-a);
+                        break;
+
+                    case '*':
+                        stack.push(b*a);
+                        break;
+
+                    case '/':
+                        stack.push(b/a);
+                        break;
+                }
             }
         }
+        bw.write(String.format("%.2f",stack.pop()) + "\n");
 
-
-
-
-        bw.write(count + "\n");
         bw.flush();
         br.close();
         bw.close();
