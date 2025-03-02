@@ -4,63 +4,59 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static boolean[] visited;
+    static ArrayList<ArrayList<Integer>> l = new ArrayList<>();
+    static int a;
+    static int b;
+    static int result = -1;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] nk = br.readLine().split(" ");
-        int N = Integer.parseInt(nk[0]); // 바퀴칸
-        int K = Integer.parseInt(nk[1]); // 몇번돌릴지
 
-        char[] fnffpt = new char[N];
-        for(int i = 0; i < N; i++){
-            fnffpt[i] = '?';
+        int N = Integer.parseInt(br.readLine());
+        visited = new boolean[N+1];
+
+        for(int i = 0; i <= N; i++){
+            l.add(new ArrayList<>());
         }
 
-        boolean[] alphabet = new boolean[26];
-        int current = 0;
-        for(int i = 0; i < K; i++){
-            String[] s = br.readLine().split(" ");
-            int next = Integer.parseInt(s[0]);
-            current = current - next % N;
-            if(current < 0){
-                current += N;
-            }
+        String[] s = br.readLine().split(" ");
+        a = Integer.parseInt(s[0]);
+        b = Integer.parseInt(s[1]);
 
-            if(fnffpt[current] != '?' && fnffpt[current] != s[1].charAt(0)){
-                bw.write("!\n");
-                bw.flush();
-                bw.close();
-                br.close();
-                return;
-            } // 이미 뭔가 있는경우
+        int m = Integer.parseInt(br.readLine());
 
-            // 이미 쓴거라면
-            if(fnffpt[current] == '?' && alphabet[s[1].charAt(0) - 'A']){
-                bw.write("!\n");
-                bw.flush();
-                bw.close();
-                br.close();
-                return;
-            }
-            fnffpt[current] = s[1].charAt(0);
-            alphabet[s[1].charAt(0) - 'A'] = true;
+        for(int i = 0; i < m; i++){
+            String[] ss = br.readLine().split(" ");
+            int x = Integer.parseInt(ss[0]);
+            int y = Integer.parseInt(ss[1]);
 
+            l.get(x).add(y);
+            l.get(y).add(x);
         }
 
+        dfs(a,0);
 
-
-        for(int i = 0; i < N; i++){
-            bw.write(fnffpt[(current + i) % N]);
-        }
-        bw.write("\n");
-
-
-
-
-
+        bw.write(result + "\n");
         bw.flush();
         br.close();
         bw.close();
+    }
+
+    static void dfs(int node, int depth){
+        if(node == b){
+            result = depth;
+            return;
+        }
+
+        visited[node] = true;
+
+        for(int next : l.get(node)){
+            if(!visited[next]){
+                dfs(next,depth+1);
+            }
+        }
+
     }
 }
