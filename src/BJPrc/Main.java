@@ -9,35 +9,42 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
+        // 백스페이스 -
 
-        int[] balloons = new int[N + 1];
-        LinkedList<int[]> ll = new LinkedList<>();
-        String[] s = br.readLine().split(" ");
 
-        // 먼저 1번 터뜨리고 종이 값 확인해서 오른쪽으로 숙숙 (양 -> 오 음 -> 왼)
         for (int i = 0; i < N; i++) {
-            ll.add(new int[]{i + 1, Integer.parseInt(s[i])});
-        }
-        int removeIdx = 0;
+            String s = br.readLine();
+            LinkedList<Character> ll = new LinkedList<>();
+            LinkedList<Character> ans = new LinkedList<>();
 
-        while (!ll.isEmpty()) {
-            int[] current = ll.remove(removeIdx);
-            bw.write(current[0] + " ");
-
-            if (ll.isEmpty()) {
-                break;
+            for (char c : s.toCharArray()) {
+                ll.add(c);
             }
-            int next = current[1];
-
-            if (next > 0) {
-                removeIdx = (removeIdx + next - 1) % ll.size();
-            } else {
-                removeIdx = (removeIdx + next) % ll.size();
-                if (removeIdx < 0) {
-                    removeIdx += ll.size();
+            int idx = 0;
+            while (!ll.isEmpty()) {
+                char current = ll.pollFirst();
+                if (current == '<') {
+                    if (idx > 0) {
+                        idx--;
+                    }
+                } else if (current == '>') {
+                    if (idx < ans.size()) {
+                        idx++;
+                    }
+                } else if (current == '-') {
+                    if (idx > 0) {
+                        ans.remove(idx - 1);
+                        idx--;
+                    }
+                } else {
+                    ans.add(idx, current);
+                    idx++;
                 }
             }
-
+            for(char c : ans){
+                bw.write(c);
+            }
+            bw.write("\n");
         }
 
 
