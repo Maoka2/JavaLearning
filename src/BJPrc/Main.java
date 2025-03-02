@@ -8,38 +8,38 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String s = br.readLine();
-        Stack<Character> stack = new Stack<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                stack.push(s.charAt(i));
-            } else if (s.charAt(i) == ')') {
-                while (!stack.isEmpty() && stack.peek() != '(') {
-                    sb.append(stack.pop());
-                }
-                stack.pop(); //여는거 제거
-            } else if (s.charAt(i) >= 'A' && s.charAt(i) <= 'Z') {
-                sb.append(s.charAt(i));
+        int N = Integer.parseInt(br.readLine());
+
+        int[] balloons = new int[N + 1];
+        LinkedList<int[]> ll = new LinkedList<>();
+        String[] s = br.readLine().split(" ");
+
+        // 먼저 1번 터뜨리고 종이 값 확인해서 오른쪽으로 숙숙 (양 -> 오 음 -> 왼)
+        for (int i = 0; i < N; i++) {
+            ll.add(new int[]{i + 1, Integer.parseInt(s[i])});
+        }
+        int removeIdx = 0;
+
+        while (!ll.isEmpty()) {
+            int[] current = ll.remove(removeIdx);
+            bw.write(current[0] + " ");
+
+            if (ll.isEmpty()) {
+                break;
+            }
+            int next = current[1];
+
+            if (next > 0) {
+                removeIdx = (removeIdx + next - 1) % ll.size();
             } else {
-                while (!stack.isEmpty() && ((stack.peek() == '*' || stack.peek() == '/') ||
-                        (s.charAt(i) == '+' || s.charAt(i) == '-') && (stack.peek() == '+' || stack.peek() == '-'))) {
-                    sb.append(stack.pop());
-
-
+                removeIdx = (removeIdx + next) % ll.size();
+                if (removeIdx < 0) {
+                    removeIdx += ll.size();
                 }
-                stack.push(s.charAt(i));
             }
 
-
-
-
-        }
-        while (!stack.isEmpty()) {
-            sb.append(stack.pop());
         }
 
-        bw.write(sb + "\n");
 
         bw.flush();
         br.close();
