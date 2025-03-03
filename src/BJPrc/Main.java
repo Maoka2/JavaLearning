@@ -4,77 +4,72 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N,M,K;
+    static int N, M, K;
+    static int[][] xhdfh;
     static boolean[][] visited;
-    static int[][] qocn;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int T = Integer.parseInt(br.readLine());
+        String[] nmk = br.readLine().split(" ");
+        N = Integer.parseInt(nmk[0]);
+        M = Integer.parseInt(nmk[1]);
+        K = Integer.parseInt(nmk[2]);
 
-        for(int tc = 0; tc < T; tc++) {
+        xhdfh = new int[N][M];
+        visited = new boolean[N][M];
+        for (int i = 0; i < K; i++) {
+            String[] rc = br.readLine().split(" ");
+            int r = Integer.parseInt(rc[0]) - 1;
+            int c = Integer.parseInt(rc[1]) - 1;
 
+            xhdfh[r][c] = 1;
+        }
 
-            String[] mnk = br.readLine().split(" ");
+        int max = 0;
 
-            M = Integer.parseInt(mnk[0]);
-            N = Integer.parseInt(mnk[1]);
-            K = Integer.parseInt(mnk[2]);
-
-            qocn = new int[N][M];
-
-            for (int i = 0; i < K; i++) {
-                String[] s = br.readLine().split(" ");
-                int x = Integer.parseInt(s[0]);
-                int y = Integer.parseInt(s[1]);
-
-                qocn[y][x] = 1;
-            }
-
-            visited = new boolean[N][M];
-            int count = 0;
-            for(int i = 0; i < N; i++){
-                for(int j = 0; j < M; j++){
-                    if(qocn[i][j] == 1  && ! visited[i][j]){
-                        bfs(i,j);
-                        count++;
-                    }
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < M; j++){
+                if(xhdfh[i][j] == 1 && !visited[i][j]){
+                    max = Math.max(max,bfs(i,j));
                 }
             }
-            bw.write(count + "\n");
         }
+
+        bw.write(max + "\n");
         bw.flush();
         br.close();
         bw.close();
     }
-    static void bfs(int y, int x){
+
+    static int bfs(int x, int y) {
         Queue<int[]> q = new LinkedList<>();
-        int[] dy = {-1,1,0,0};
-        int[] dx = {0,0,-1,1};
-        q.add(new int[]{y,x});
-        visited[y][x] = true;
+        q.add(new int[]{x,y});
+        visited[x][y] = true;
+        int count = 1;
+
+        int[] dx = {-1,1,0,0};
+        int[] dy = {0,0,-1,1};
 
         while(!q.isEmpty()){
-            int[] node = q.poll();
-            int cy = node[0];
-            int cx = node[1];
+            int[] current = q.poll();
+            int cx = current[0];
+            int cy = current[1];
 
             for(int i = 0; i < 4; i++){
                 int mx = cx + dx[i];
                 int my = cy + dy[i];
 
-                if(mx >= 0 && my >= 0 && mx < M && my < N){
-                    if(qocn[my][mx] == 1 && ! visited[my][mx]){
-                           visited[my][mx] = true;
-                        q.add(new int[]{my,mx});
+                if(mx >= 0 && my >= 0 && my < M && mx < N){
+                    if(xhdfh[mx][my] == 1 && !visited[mx][my]){
+                        count++;
+                        visited[mx][my] = true;
+                        q.add(new int[]{mx,my});
                     }
                 }
             }
-
-
         }
-
+        return count;
     }
 }
 
