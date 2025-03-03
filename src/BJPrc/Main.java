@@ -4,63 +4,59 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int F, S, G, U, D;
-    static int[] floors;
+    static int N, M, R;
+    static ArrayList<ArrayList<Integer>> l = new ArrayList<>();
     static boolean[] visited;
-
+    static int[] nodes;
+    static int count = 0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        //F 총 층 S 현재층  G 스타트링크
 
-        String[] s = br.readLine().split(" ");
-        F = Integer.parseInt(s[0]);
-        S = Integer.parseInt(s[1]);
-        G = Integer.parseInt(s[2]);
-        U = Integer.parseInt(s[3]);
-        D = Integer.parseInt(s[4]);
+        String[] nmr = br.readLine().split(" ");
+        N = Integer.parseInt(nmr[0]);
+        M = Integer.parseInt(nmr[1]);
+        R = Integer.parseInt(nmr[2]);
 
-        floors = new int[F + 1];
-        visited = new boolean[F + 1];
+        for(int i = 0; i <= N; i++){
+            l.add(new ArrayList<>());
+        }
+        nodes = new int[N+1];
+        visited = new boolean[N+1];
 
-        int result = bfs(S,G);
+        for(int i = 0; i < M; i++){
+            String[] s = br.readLine().split(" ");
+            int u = Integer.parseInt(s[0]);
+            int v = Integer.parseInt(s[1]);
 
-        if(result == -1){
-            bw.write("use the stairs\n");
-        } else{
-            bw.write(result + "\n");
+            l.get(u).add(v);
+            l.get(v).add(u);
+
+        }
+
+        for(int i = 1; i <= N; i++){
+            Collections.sort(l.get(i));
+        }
+
+        dfs(R);
+
+        for(int i = 1; i < nodes.length; i++){
+            bw.write(nodes[i] + "\n");
         }
 
         bw.flush();
         br.close();
         bw.close();
     }
+    static void dfs(int node){
+        visited[node] = true;
+        nodes[node] = ++count;
 
-    static int bfs(int S, int G) {
-        Queue<int[]> q = new LinkedList<>();
-        int count = 0;
-        q.add(new int[]{S, count});
-        visited[S] = true;
-
-        while (!q.isEmpty()) {
-            int[] current = q.poll();
-            int floor = current[0];
-            count = current[1];
-
-            if (floor == G) {
-                return count;
-            }
-            int[] move = {floor + U, floor - D};
-            for (int i = 0; i < move.length; i++) {
-                int next = move[i];
-
-                if (next >= 1 && next <= F && !visited[next]) {
-                    visited[next] = true;
-                    q.add(new int[]{next, count + 1});
-                }
+        for(int next : l.get(node)){
+            if(!visited[next]){
+                dfs(next);
             }
         }
-        return -1;
     }
 }
 
