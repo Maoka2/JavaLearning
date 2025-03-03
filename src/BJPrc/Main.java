@@ -4,59 +4,63 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static int N,M;
     static boolean[] visited;
     static ArrayList<ArrayList<Integer>> l = new ArrayList<>();
-    static int a;
-    static int b;
-    static int result = -1;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        String[] nm = br.readLine().split(" ");
 
-        int N = Integer.parseInt(br.readLine());
-        visited = new boolean[N+1];
+        N = Integer.parseInt(nm[0]);
+        M = Integer.parseInt(nm[1]);
 
         for(int i = 0; i <= N; i++){
             l.add(new ArrayList<>());
         }
 
-        String[] s = br.readLine().split(" ");
-        a = Integer.parseInt(s[0]);
-        b = Integer.parseInt(s[1]);
+        for(int i = 0; i < M; i++){
+            String[] uv = br.readLine().split(" ");
+            int u = Integer.parseInt(uv[0]);
+            int v = Integer.parseInt(uv[1]);
 
-        int m = Integer.parseInt(br.readLine());
-
-        for(int i = 0; i < m; i++){
-            String[] ss = br.readLine().split(" ");
-            int x = Integer.parseInt(ss[0]);
-            int y = Integer.parseInt(ss[1]);
-
-            l.get(x).add(y);
-            l.get(y).add(x);
+            l.get(u).add(v);
+            l.get(v).add(u);
         }
 
-        dfs(a,0);
+        visited = new boolean[N+1];
 
-        bw.write(result + "\n");
+        int count = 0;
+        for(int i = 1; i <= N; i++){
+            if(!visited[i]){
+                bfs(i);
+                count++;
+            }
+        }
+
+
+        bw.write(count + "\n");
+
         bw.flush();
         br.close();
         bw.close();
     }
 
-    static void dfs(int node, int depth){
-        if(node == b){
-            result = depth;
-            return;
-        }
+    static void bfs(int start){
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start);
+        visited[start] = true;
 
-        visited[node] = true;
-
-        for(int next : l.get(node)){
-            if(!visited[next]){
-                dfs(next,depth+1);
+        while(!q.isEmpty()){
+            int node = q.poll();
+            for(int next : l.get(node)){
+                if(!visited[next]){
+                    visited[next] = true;
+                    q.add(next);
+                }
             }
         }
-
     }
 }
+
