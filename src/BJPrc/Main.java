@@ -4,58 +4,60 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N,M,R;
-    static boolean[] visited;
-    static int[] order;
-    static int count = 0;
-    static ArrayList<ArrayList<Integer>> l = new ArrayList<>();
+    static int N;
+    static int[][] quad;
+    static BufferedWriter bw;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] nmr = br.readLine().split(" ");
-        N = Integer.parseInt(nmr[0]);
-        M = Integer.parseInt(nmr[1]);
-        R = Integer.parseInt(nmr[2]);
-        order = new int[N+1];
-        visited = new boolean[N+1];
-        for(int i = 0; i <= N; i++){
-            l.add(new ArrayList<>());
-        }
-
-        for(int i = 0; i < M; i++){
-            String[] uv = br.readLine().split(" ");
-            int u = Integer.parseInt(uv[0]);
-            int v = Integer.parseInt(uv[1]);
-
-            l.get(u).add(v);
-            l.get(v).add(u);
-        }
-
-        for(int i = 1; i <= N; i++){
-            l.get(i).sort(Collections.reverseOrder());
+        N = Integer.parseInt(br.readLine());
+        quad = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            String s = br.readLine();
+            for (int j = 0; j < N; j++) {
+                quad[i][j] = s.charAt(j) - '0';
+            }
         }
 
 
-        dfs(R);
+        recur(0, 0, N);
 
-        for(int i = 1; i <= N; i++){
-            bw.write(order[i] + "\n");
-        }
         bw.flush();
         br.close();
         bw.close();
     }
-    static void dfs(int R){
-        visited[R] = true;
-        order[R] = ++count;
 
-        for(int next : l.get(R)){
-            if(!visited[next]){
-                dfs(next);
+    static void recur(int x, int y, int size) throws IOException {
+        boolean isPossible = true;
+
+
+        // 반복 조건
+        int temp = quad[x][y];
+
+        a:
+        for (int i = x; i < x + size; i++) {
+            for (int j = y; j < y + size; j++) {
+                if (temp != quad[i][j]) {
+                    isPossible = false;
+                    break a;
+                }
             }
         }
 
+        if (isPossible) {
+            bw.write(String.valueOf(temp));
+            return;
+        }
+
+        bw.write('(');
+
+        recur(x, y, size / 2);
+        recur(x, y + size / 2, size / 2);
+        recur(x + size / 2, y, size / 2);
+        recur(x + size / 2, y + size / 2, size / 2);
+
+        bw.write(')');
     }
 }
-
