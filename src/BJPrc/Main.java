@@ -4,94 +4,89 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int N, M;
-    static int[][] tomato;
-    static boolean[][] visited;
-    static Queue<int[]> q = new LinkedList<>();
+    static char[][] candy;
+    static int N;
 
     public static void main(String[] args) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] nm = br.readLine().split(" ");
-        M = Integer.parseInt(nm[0]);
-        N = Integer.parseInt(nm[1]);
+        N = Integer.parseInt(br.readLine());
 
-        tomato = new int[N][M];
-        visited = new boolean[N][M];
+        candy = new char[N][N];
 
-
-        boolean noTrash = true;
         for (int i = 0; i < N; i++) {
-            String[] s = br.readLine().split(" ");
-            for (int j = 0; j < M; j++) {
-                tomato[i][j] = Integer.parseInt(s[j]);
-                if (tomato[i][j] == 0) {
-                    noTrash = false;
-                } else if (tomato[i][j] == 1) {
-                    q.add(new int[]{i, j,0});
-                    visited[i][j] = true;
-                }
+            String s = br.readLine();
+            for (int j = 0; j < N; j++) {
+                candy[i][j] = s.charAt(j);
+            }
+        }
+        int max = 0;
+
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N - 1; j++) {
+                swapLR(i, j);
+                max = Math.max(Math.max(max, getRMax(i)), Math.max(getCMax(j), getCMax(j + 1)));
+                swapLR(i, j);
             }
         }
 
-        if (noTrash) {
-            bw.write("0\n");
-            bw.flush();
-            br.close();
-            bw.close();
-            return;
-        }
+        for (int i = 0; i < N - 1; i++) {
+            for (int j = 0; j < N; j++) {
+                swapUD(i, j);
+                max = Math.max(Math.max(max, getCMax(j)), Math.max(getRMax(i), getRMax(i + 1)));
+                swapUD(i, j);
 
-        int ans = bfs();
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (tomato[i][j] == 0) {
-                    bw.write("-1\n");
-                    bw.flush();
-                    bw.close();
-                    br.close();
-                    return;
-                }
             }
         }
-
-        bw.write(ans + "\n");
-
+        bw.write(max + "\n");
 
         bw.flush();
         bw.close();
         br.close();
     }
 
-    static int bfs() {
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-        int min = Integer.MIN_VALUE;
+    static void swapUD(int x, int y) {
+        char temp = candy[x][y];
+        candy[x][y] = candy[x + 1][y];
+        candy[x + 1][y] = temp;
+    }
 
-        while (!q.isEmpty()) {
-            int[] current = q.poll();
-            int cx = current[0];
-            int cy = current[1];
-            int day = current[2];
+    static void swapLR(int x, int y) {
+        char temp = candy[x][y];
+        candy[x][y] = candy[x][y + 1];
+        candy[x][y + 1] = temp;
+    }
 
-            min = Math.max(min,day);
+    static int getCMax(int c) {
+        int max = 0;
+        int count = 1;
 
-            for (int i = 0; i < 4; i++) {
-                int mx = cx + dx[i];
-                int my = cy + dy[i];
-
-                if (mx >= 0 && my >= 0 && mx < N && my < M) {
-                    if (!visited[mx][my] && tomato[mx][my] == 0) {
-                        visited[mx][my] = true;
-                        tomato[mx][my] = 1;
-                        q.add(new int[]{mx, my, day + 1});
-                    }
-                }
-
+        for (int i = 1; i < N; i++) {
+            if (candy[i][c] == candy[i - 1][c]) {
+                count++;
+            } else {
+                max = Math.max(max, count);
+                count = 1;
             }
         }
-        return min;
+
+        return Math.max(max, count);
+    }
+
+    static int getRMax(int r) {
+        int max = 0;
+        int count = 1;
+
+        for (int i = 1; i < N; i++) {
+            if (candy[r][i] == candy[r][i - 1]) {
+                count++;
+            } else {
+                max = Math.max(max, count);
+                count = 1;
+            }
+        }
+        return Math.max(max, count);
     }
 }
